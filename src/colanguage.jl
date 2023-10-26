@@ -3,6 +3,7 @@ using Catlab
 using Catlab.CategoricalAlgebra
 
 function Term(s::SummationDecapode)
+  println("Converting")
   judgements = map(parts(s,:Var)) do v
     var = s[v, :name]
     typ = s[v, :type]
@@ -33,20 +34,3 @@ function Term(s::SummationDecapode)
   end
   Decapodes.DecaExpr(judgements, vcat(op1s, op2s, sums))
 end
-
-dexp = parse_decapode(quote
-  A::Form0{X}
-  B::Form1{X}
-  C::Form0{X}
-  D::Form0{X}
-
-  B == grad(A)
-  C == f(A,B)
-  ∂ₜ(A) == C
-  ∂ₜ(D) == C + D
-end)
-
-d = SummationDecapode(dexp)
-
-dexpr′ = Term(d)
-d′ = SummationDecapode(Term(d))
